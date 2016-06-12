@@ -37,11 +37,11 @@ module.exports = {
     },
     devtool: '#inline-source-map',
     externals: [
-        (function() {
+        (function ignoreElectron() {
             var IGNORES = [
                 'electron'
             ];
-            return function(context, request, callback) {
+            return (context, request, callback) => {
                 if (IGNORES.indexOf(request) >= 0) {
                     return callback(null, "require('" + request + "')");
                 }
