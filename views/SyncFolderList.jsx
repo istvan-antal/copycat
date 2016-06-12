@@ -1,6 +1,7 @@
 import React from 'react';
+import { SyncFolderFormRow } from './SyncFolderFormRow';
 
-export const SyncFolderList = (props) => (
+export const SyncFolderList = ({ synclist, addSyncFolder }) => (
     <table className="table-striped">
         <thead>
             <tr>
@@ -10,7 +11,7 @@ export const SyncFolderList = (props) => (
             </tr>
         </thead>
         <tbody>
-            {props.synclist.map((syncfolder, index) => (
+            {synclist.map((syncfolder, index) => (
                 <tr key={index}>
                     <td>{syncfolder.localPath}</td>
                     <td>{syncfolder.remotePath}</td>
@@ -18,17 +19,7 @@ export const SyncFolderList = (props) => (
                     </td>
                 </tr>
             ))}
-            <tr>
-                <td><input type="text"/></td>
-                <td><input type="text"/></td>
-                <td>
-                    <button
-                        className="btn btn-default"
-                        onClick={ () => props.addSyncFolder('foo', 'bar') }>
-                        Add
-                    </button>
-                </td>
-            </tr>
+            <SyncFolderFormRow addSyncFolder={ addSyncFolder}/>
         </tbody>
     </table>
 );
