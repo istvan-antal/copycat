@@ -3,6 +3,7 @@ import createLogger from 'redux-logger';
 import { remote } from 'electron';
 const { writeFile, readFileSync, existsSync } = remote.require('fs');
 import { synclist } from './reducers/synclist';
+import { currentView } from './reducers/currentView';
 
 const app = remote.app;
 const userDataPath = app.getPath('userData');
@@ -24,6 +25,7 @@ export default function configureStore() {
     }
 
     return createStore(combineReducers({
+        currentView,
         synclist
     }), initialSate, applyMiddleware(logger, persistence));
 }
