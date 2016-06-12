@@ -35,5 +35,18 @@ module.exports = {
         colors: true,
         reasons: true
     },
-    devtool: '#inline-source-map'
+    devtool: '#inline-source-map',
+    externals: [
+        (function() {
+            var IGNORES = [
+                'electron'
+            ];
+            return function(context, request, callback) {
+                if (IGNORES.indexOf(request) >= 0) {
+                    return callback(null, "require('" + request + "')");
+                }
+                return callback();
+            };
+        }())
+    ]
 };
