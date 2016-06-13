@@ -8,6 +8,11 @@ export const HomeScreen = ({ switchCurrentView }) => (
                 className="btn btn-default">
                     Synclist
             </button>
+            <button
+                onClick={ () => switchCurrentView('SyncFolderList') }
+                className="btn btn-default">
+                    Synclist
+            </button>
         </li>
     </ul>
 );

@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addSyncFolder } from '../store/actions/synclist';
+import { startSync, stopSync } from '../store/actions/sync';
 import { switchCurrentView } from '../store/actions/currentView';
 import { Window } from '../views/Window';
 import { HomeScreen } from '../views/HomeScreen';
 import { SyncFolderList } from '../views/SyncFolderList';
+import { ProgressScreen } from '../views/ProgressScreen';
 
 const AppView = (props) => {
     let currentView;
@@ -12,14 +14,19 @@ const AppView = (props) => {
     switch (props.currentView) {
     case 'SyncFolderList':
         currentView = (
-            <SyncFolderList synclist={props.synclist} addSyncFolder={props.addSyncFolder}/>)
-        ;
+            <SyncFolderList synclist={props.synclist} addSyncFolder={props.addSyncFolder}/>
+        );
+        break;
+    case 'ProgressScreen':
+        currentView = (
+            <ProgressScreen progress={ props.progress }/>
+        );
         break;
     default:
         currentView = <HomeScreen switchCurrentView={props.switchCurrentView}/>;
     }
     return (
-        <Window currentView={props.currentView} switchCurrentView={props.switchCurrentView}>
+        <Window {...props}>
             {currentView}
         </Window>
     );
@@ -31,6 +38,14 @@ const mapDispatchToProps = (dispatch) => ({
     },
     addSyncFolder: (localPath, remotePath) => {
         dispatch(addSyncFolder(localPath, remotePath));
+    },
+    startSync: (syncType) => {
+        dispatch(startSync(syncType));
+        dispatch(switchCurrentView('ProgressScreen'));
+    },
+    stopSync: () => {
+        dispatch(stopSync());
+        dispatch(switchCurrentView('HomeScreen'));
     }
 });
 

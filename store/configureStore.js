@@ -4,6 +4,8 @@ import { remote } from 'electron';
 const { writeFile, readFileSync, existsSync } = remote.require('fs');
 import { synclist } from './reducers/synclist';
 import { currentView } from './reducers/currentView';
+import { progress } from './reducers/progress';
+import { sync } from './reducers/sync';
 
 const app = remote.app;
 const userDataPath = app.getPath('userData');
@@ -26,6 +28,8 @@ export default function configureStore() {
 
     return createStore(combineReducers({
         currentView,
-        synclist
+        synclist,
+        progress,
+        sync
     }), initialSate, applyMiddleware(logger, persistence));
 }
