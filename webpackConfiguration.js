@@ -39,7 +39,7 @@ module.exports = {
     externals: [
         (function ignoreElectron() {
             var IGNORES = [
-                'electron'
+                'electron', 'fs', 'child_process'
             ];
             return (context, request, callback) => {
                 if (IGNORES.indexOf(request) >= 0) {

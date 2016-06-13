@@ -14,6 +14,7 @@ function getRemoteToLocalSyncCommand(localPath, remotePath) {
 
 function runSyncCommand(command) {
     const proc = spawn('/bin/sh', ['-c', command]);
+    let progressDescription = '';
     const result = new RsyncOperation(function doRsync(resolve, reject) {
         proc.on('close', (code) => {
             if (code === 0) {
@@ -27,7 +28,11 @@ function runSyncCommand(command) {
     proc.stdout.on('data', (data) => {
         const line = trimOutput(data);
         if (isProgressLine(line)) {
-            result.makeProgress(getProgressValues(line));
+            result.makeProgress(Object.assign(getProgressValues(line), {
+                description: progressDescription
+            }));
+        } else {
+            progressDescription = line;
         }
     });
 
@@ -41,7 +46,7 @@ function syncRemoteToLocal(localPath, remotePath) {
 function syncLocalToRemote(localPath, remotePath) {
     return runSyncCommand(getLocalToRemoteSyncCommand(localPath, remotePath));
 }
-
+//
 module.exports.syncRemoteToLocal = syncRemoteToLocal;
 module.exports.syncLocalToRemote = syncLocalToRemote;
 /*

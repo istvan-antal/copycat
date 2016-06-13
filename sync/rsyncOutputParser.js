@@ -1,4 +1,4 @@
-const progressLinePattern = /^\S+\s+(\d{1,2})%\s+(\d?.\d*\w+\/s)\s+\d{1,2}:\d{2}:\d{2}$/;
+const progressLinePattern = /^\S+\s+(\d{1,2})%\s+(\d+?.\d*\w+\/s)\s+\d{1,2}:\d{2}:\d{2}$/;
 
 function isProgressLine(string) {
     return progressLinePattern.test(string);

@@ -16,4 +16,11 @@ describe('sync/rsyncOutputParser', () => {
             speedText: '9.41MB/s'
         });
     });
+
+    it('should correctly parse outputs where file is bigger than 10MB', () => {
+        expect(getProgressValues('44,629,165  24%   42.06MB/s    0:00:03')).toEqual({
+            percentage: 24,
+            speedText: '42.06MB/s'
+        });
+    });
 });
