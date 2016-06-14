@@ -8,12 +8,15 @@ function formatDescription(description) {
 }
 
 export const ProgressScreen = ({ progress }) => (
-    <ul className="list-group">
-        <li className="list-group-item">
+    <div style={ { padding: 10, textAlign: 'center' } }>
+        <div>
             { formatDescription(progress.description) }
-            <progress max="100" value={ progress.percentage || 0.1 }>
-            </progress>
+        </div>
+        <div>
+            <progress max="100" value={ progress.percentage || 0.1 }/>
+        </div>
+        <div>
             { progress.speedText }
-        </li>
-    </ul>
+        </div>
+    </div>
 );
