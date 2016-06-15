@@ -54,8 +54,6 @@ gulp.task('run', ['runner-files'], () => {
 
     const compiler = webpack(config);
 
-    //console.log(config);
-
     new WebpackDevServer(compiler, {
         contentBase: path.resolve(__dirname, 'dist')
     }).listen(8080, 'localhost', (err) => {
