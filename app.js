@@ -3,7 +3,9 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { App } from './components/App';
 import configureStore from './store/configureStore';
-const store = configureStore();
+import * as backend from './store/backend';
+
+const store = configureStore(backend);
 
 render(
     <Provider store={store}>

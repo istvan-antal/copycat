@@ -1,9 +1,16 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { App } from './views/App';
+import { Provider } from 'react-redux';
+import { App } from './components/App';
+import configureStore from './store/configureStore';
+import * as backend from './store/backend.dev';
+
+const store = configureStore(backend);
 
 render(
-    <App/>
+    <Provider store={store}>
+        <App {...store.getState()}/>
+    </Provider>
     ,
     document.getElementById('app')
 );
