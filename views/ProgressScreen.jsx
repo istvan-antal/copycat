@@ -2,7 +2,7 @@ import React from 'react';
 
 import './ProgressScreen.css';
 
-export const ProgressScreen = ({ progress }) => (
+export const ProgressScreen = ({ progress, stopSync }) => (
     <div className="outer">
         <div className="middle">
             <div className="inner">
@@ -15,6 +15,10 @@ export const ProgressScreen = ({ progress }) => (
                 <div>
                     { progress.speedText }
                 </div>
+                <button key="stop" className="btn btn-default"
+                    onClick={ stopSync }>
+                    Stop
+                </button>
             </div>
         </div>
     </div>

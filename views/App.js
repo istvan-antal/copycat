@@ -15,11 +15,13 @@ export const App = (props) => {
         break;
     case 'ProgressScreen':
         currentView = (
-            <ProgressScreen progress={ props.progress }/>
+            <ProgressScreen progress={ props.progress } stopSync={ props.stopSync }/>
         );
         break;
     default:
-        currentView = <HomeScreen switchCurrentView={props.switchCurrentView}/>;
+        currentView = <HomeScreen
+            startSync={ props.startSync }
+            switchCurrentView={props.switchCurrentView}/>;
     }
     return (
         <Window {...props}>
