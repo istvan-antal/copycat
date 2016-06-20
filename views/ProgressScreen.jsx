@@ -15,10 +15,6 @@ export const ProgressScreen = ({ progress, stopSync }) => (
                 <div>
                     { progress.speedText }
                 </div>
-                <button key="stop" className="btn btn-default"
-                    onClick={ stopSync }>
-                    Stop
-                </button>
             </div>
         </div>
     </div>

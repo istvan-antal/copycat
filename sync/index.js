@@ -26,14 +26,19 @@ function runSyncCommand(command) {
     });
 
     proc.stdout.on('data', (data) => {
-        const line = trimOutput(data);
-        if (isProgressLine(line)) {
-            result.makeProgress(Object.assign(getProgressValues(line), {
-                description: progressDescription
-            }));
-        } else {
-            progressDescription = line;
-        }
+        const lines = trimOutput(data);
+        lines.split(/[\n\r\t]/).forEach((lineString) => {
+            const line = trimOutput(lineString);
+            if (isProgressLine(line)) {
+                result.makeProgress(Object.assign(getProgressValues(line), {
+                    description: progressDescription
+                }));
+            } else {
+                if (line) {
+                    progressDescription = line;
+                }
+            }
+        });
     });
 
     return result;
