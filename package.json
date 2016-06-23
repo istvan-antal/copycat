@@ -1,9 +1,10 @@
 {
   "name": "copycat",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Copycat",
   "main": "main.js",
   "scripts": {
+    "package": "gulp build-js && electron-packager . CopyCat --icon=icon.icns --platform=darwin --arch=x64 --out=build --overwrite",
     "start": "electron main.js",
     "test": "mocha --compilers js:babel-register --recursive",
     "test:watch": "npm test -- --watch"
@@ -14,7 +15,11 @@
     "start",
     "tutorial"
   ],
-  "author": "István Miklós Antal",
+  "author": {
+    "name": "István Miklós Antal",
+    "email": "istvan.m.antal@gmail.com",
+    "url": "https://istvan.xyz"
+  },
   "license": "MIT",
   "dependencies": {
     "autoprefixer": "^6.3.6",
@@ -36,6 +41,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "golden-layout": "^1.5.1",
     "gulp": "^3.9.1",
+    "electron-packager": "^7.0.1",
     "gulp-eslint": "^2.0.0",
     "gulp-mocha": "^2.2.0",
     "gulp-rename": "^1.2.2",
