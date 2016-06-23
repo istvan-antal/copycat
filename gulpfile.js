@@ -26,7 +26,7 @@ gulp.task('index.html', () =>
 
 gulp.task('photon', () =>
     gulp.src(__dirname + '/node_modules/photon/**/*', {
-        base: '.'
+        base: './node_modules'
     })
     .pipe(gulp.dest('dist/'))
 );

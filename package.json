@@ -4,7 +4,7 @@
   "description": "Copycat",
   "main": "main.js",
   "scripts": {
-    "package": "gulp build-js && electron-packager . CopyCat --icon=icon.icns --platform=darwin --arch=x64 --out=build --overwrite",
+    "package": "gulp photon && gulp build-js && electron-packager . CopyCat --icon=icon.icns --platform=darwin --arch=x64 --out=build --ignore=node_modules --overwrite",
     "start": "electron main.js",
     "test": "mocha --compilers js:babel-register --recursive",
     "test:watch": "npm test -- --watch"
