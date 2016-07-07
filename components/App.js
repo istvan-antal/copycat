@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { addSyncFolder } from '../store/actions/synclist';
+import { addSyncFolder, removeSyncFolder } from '../store/actions/synclist';
 import { startSync, stopSync } from '../store/actions/sync';
 import { switchCurrentView } from '../store/actions/currentView';
 import { App as AppView } from '../views/App';
@@ -10,6 +10,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     addSyncFolder: (localPath, remotePath) => {
         dispatch(addSyncFolder(localPath, remotePath));
+    },
+    removeSyncFolder: (index) => {
+        dispatch(removeSyncFolder(index));
     },
     startSync: (syncType) => {
         dispatch(startSync(syncType));

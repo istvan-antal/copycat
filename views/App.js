@@ -14,7 +14,11 @@ export const App = (props) => {
         break;
     default:
         currentView = (
-            <SyncFolderList synclist={props.synclist} addSyncFolder={props.addSyncFolder}/>
+            <SyncFolderList
+                synclist={props.synclist}
+                addSyncFolder={props.addSyncFolder}
+                removeSyncFolder={props.removeSyncFolder}
+            />
         );
     }
     return (

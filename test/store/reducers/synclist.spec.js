@@ -1,7 +1,7 @@
 import expect from 'expect';
 import deepFreeze from 'deep-freeze';
 import { synclist } from '../../../store/reducers/synclist';
-import { addSyncFolder } from '../../../store/actions/synclist';
+import { addSyncFolder, removeSyncFolder } from '../../../store/actions/synclist';
 
 describe('store/reducers/synclist', () => {
     const initialSate = deepFreeze([]);
@@ -30,6 +30,36 @@ describe('store/reducers/synclist', () => {
         ).toEqual([
             { localPath: '~/Downloads', remotePath: 'myserver:~/Downloads' },
             { localPath: '~/Downloads2', remotePath: 'myserver:~/Downloads2' }
+        ]);
+    });
+
+    it('should remove syncfolder', () => {
+        expect(
+            synclist(
+                [
+                    { localPath: '~/Downloads', remotePath: 'myserver:~/Downloads' },
+                    { localPath: '~/Downloads2', remotePath: 'myserver:~/Downloads2' },
+                    { localPath: '~/Downloads3', remotePath: 'myserver:~/Downloads3' }
+                ],
+                removeSyncFolder(1)
+            )
+        ).toEqual([
+            { localPath: '~/Downloads', remotePath: 'myserver:~/Downloads' },
+            { localPath: '~/Downloads3', remotePath: 'myserver:~/Downloads3' }
+        ]);
+
+        expect(
+            synclist(
+                [
+                    { localPath: '~/Downloads', remotePath: 'myserver:~/Downloads' },
+                    { localPath: '~/Downloads2', remotePath: 'myserver:~/Downloads2' },
+                    { localPath: '~/Downloads3', remotePath: 'myserver:~/Downloads3' }
+                ],
+                removeSyncFolder(0)
+            )
+        ).toEqual([
+            { localPath: '~/Downloads2', remotePath: 'myserver:~/Downloads2' },
+            { localPath: '~/Downloads3', remotePath: 'myserver:~/Downloads3' }
         ]);
     });
 });
