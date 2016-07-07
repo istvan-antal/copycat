@@ -23,6 +23,9 @@ function runSyncCommand(command) {
             }
             reject(new Error(`child process exited with code ${code}`));
         });
+    }, () => {
+        proc.stdin.pause();
+        proc.kill();
     });
 
     proc.stdout.on('data', (data) => {

@@ -4,7 +4,7 @@ const app = remote.app;
 const userDataPath = app.getPath('userData');
 const uiStateFile = userDataPath + '/state.json';
 
-import { START_SYNC } from './actions/sync';
+import { START_SYNC, STOP_SYNC } from './actions/sync';
 import { syncRemoteToLocal, syncLocalToRemote } from '../sync';
 import { updateProgress } from './actions/progress';
 import { switchCurrentView } from './actions/currentView';
@@ -16,8 +16,20 @@ const persistence = ({ getState }) => next => action => {
     return state;
 };
 
+let currentSyncOperation;
+
+window.onbeforeunload = () => {
+    if (currentSyncOperation) {
+        currentSyncOperation.cancel();
+    }
+};
+
 const syncing = ({ getState, dispatch }) => next => action => {
     const state = next(action);
+
+    if (action.type === STOP_SYNC && currentSyncOperation) {
+        currentSyncOperation.cancel();
+    }
 
     if (action.type === START_SYNC) {
         const synclistItems = getState().synclist;
@@ -30,13 +42,17 @@ const syncing = ({ getState, dispatch }) => next => action => {
             }
 
             const currentSyncItem = synclistItems[currentIndex];
-            performSync(currentSyncItem.localPath, currentSyncItem.remotePath).
+            currentSyncOperation = performSync(
+                    currentSyncItem.localPath, currentSyncItem.remotePath
+                ).
                 onProgress((progressObject) => {
                     dispatch(updateProgress(progressObject));
                 }).then(() => {
+                    currentSyncOperation = null;
                     doNextSync();
                 }, () => {
                     // console.error('FAIL');
+                    currentSyncOperation = null;
                     dispatch(switchCurrentView('HomeScreen'));
                 });
             currentIndex += 1;

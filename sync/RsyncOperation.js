@@ -1,7 +1,11 @@
 class RsyncOperation {
-    constructor(fn) {
+    constructor(fn, cancelFn) {
         this.promise = new Promise(fn);
+        this.cancelFn = cancelFn;
         this.onProgressHandlers = [];
+    }
+    cancel() {
+        this.cancelFn();
     }
     onProgress(fn) {
         this.onProgressHandlers.push(fn);
