@@ -7,7 +7,9 @@
     "package": "gulp photon && gulp build-js && electron-packager . CopyCat --icon=icon.icns --platform=darwin --arch=x64 --out=build --ignore=node_modules --overwrite",
     "start": "electron main.js",
     "test": "mocha --compilers js:babel-register --recursive",
-    "test:watch": "npm test -- --watch"
+    "test:watch": "npm test -- --watch",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "keywords": [
     "Electron",
@@ -56,6 +58,8 @@
     "redux-logger": "^2.6.1",
     "style-loader": "^0.13.1",
     "webpack-dev-server": "^1.14.1",
-    "webpack-stream": "^3.2.0"
-  }
+    "webpack-stream": "^3.2.0",
+    "snyk": "^1.53.0"
+  },
+  "snyk": true
 }
