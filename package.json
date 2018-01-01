@@ -40,7 +40,7 @@
     "expect": "^1.20.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "golden-layout": "^1.5.1",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "electron-packager": "^7.0.1",
     "gulp-eslint": "^2.0.0",
     "gulp-mocha": "^2.2.0",
