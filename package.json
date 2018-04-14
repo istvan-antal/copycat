@@ -19,8 +19,11 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/react-redux": "^5.0.16",
     "chokidar": "^2.0.3",
     "electron": "^1.8.4",
-    "react-ts-runtime": "0.0.11"
+    "react-redux": "^5.0.7",
+    "react-ts-runtime": "0.0.11",
+    "redux": "^3.7.2"
   }
 }
