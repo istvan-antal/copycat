@@ -1,8 +1,32 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { join, dirname } from 'path';
+import { AppState } from './src/reducers';
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 
 let mainWindow: BrowserWindow | null;
+const appFolderPath = join(app.getPath('appData'), 'CopyCat');
+const settingsFile = join(appFolderPath, 'state.json');
 const DEV_MODE = true;
+
+if (!existsSync(appFolderPath)) {
+    mkdirSync(appFolderPath);
+}
+
+if (!existsSync(settingsFile)) {
+    writeFileSync(settingsFile, '{}');
+}
+
+if (DEV_MODE) {
+    app.setName('CopyCat');
+}
+
+ipcMain.on('saveStore', (event: any, args: [AppState]) => {
+    writeFileSync(settingsFile, JSON.stringify(args[0]));
+});
+
+ipcMain.on('ready', (event: any) => {
+    event.sender.send('initialState', JSON.parse(readFileSync(settingsFile).toString()) || {});
+});
 
 function createWindow() {
     // Create the browser window.

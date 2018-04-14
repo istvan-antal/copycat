@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, MiddlewareAPI, Dispatch, Middleware, AnyAction, Action, combineReducers } from 'redux';
-import { AppAction/*, AppActionType*/ } from './actions';
-import { reducers } from './reducers';
+import { AppAction } from './actions';
+import { reducers, AppState } from './reducers';
+import { FolderActionType } from './actions/folders';
 // import { app, AppState } from './reducers/app';
 const { remote, ipcRenderer } = require('electron');
 
@@ -9,6 +10,11 @@ export const backendMiddleware: Middleware = <AppState>(store: MiddlewareAPI<App
     const result = next(originalAction);
     const action: AppAction = originalAction as any;
 
+    switch (action.type) {
+        case FolderActionType.AddFolder:
+            ipcRenderer.send('saveStore', [store.getState()]);
+        break;
+    }
     // ipcRenderer.send('clientLog', JSON.stringify(action));
     /*switch (action.type) {
         case AppActionType.BrowseForDestination:
@@ -22,12 +28,7 @@ export const backendMiddleware: Middleware = <AppState>(store: MiddlewareAPI<App
     return result
 }
 
-const store = createStore(combineReducers(reducers as any) as any, applyMiddleware(backendMiddleware));
-
-ipcRenderer.on('backendAction', (e: any, action: AppAction) => {
-    store.dispatch(action);
-});
-
-ipcRenderer.send('clientReady', []);
-
-export default store;
+export const create = (initialState: AppState) => {
+    const store = createStore(combineReducers(reducers as any) as any, initialState, applyMiddleware(backendMiddleware));
+    return store;
+};
