@@ -6,10 +6,11 @@ export type FolderList = Array<{
 }>;
 
 export const folders = (state: FolderList = [], action: FolderAction): FolderList => {
-    
     switch (action.type) {
         case FolderActionType.AddFolder:
         return [...state, { path: action.path }];
+        case FolderActionType.DeleteFolder:
+        return state.filter(folder => folder.path !== action.path);
     }
 
     return state;

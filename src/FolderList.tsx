@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { actions } from './actions';
 import { FolderList as FolderListType } from './reducers/folders';
 
 interface Props {
     folders: FolderListType;
+    deleteFolder: typeof actions['deleteFolder'];
 }
 
 export default class FolderList extends React.Component<Props> {
@@ -21,6 +23,16 @@ export default class FolderList extends React.Component<Props> {
                         <tr key={folder.path}>
                             <td>
                                 {folder.path}
+                            </td>
+                            <td>
+                                <button
+                                    onClick={e => {
+                                        this.props.deleteFolder(folder.path);
+                                        e.preventDefault();
+                                    }}
+                                >
+                                    X
+                                </button>
                             </td>
                         </tr>
                     ))}

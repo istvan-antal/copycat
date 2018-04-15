@@ -18,7 +18,7 @@ export default class App extends React.Component<Props> {
                     browseForFolder={this.props.actions.browseForFolder}
                     setFolderPath={this.props.actions.setFolderPath}
                 />
-                <FolderList folders={this.props.folders} />
+                <FolderList folders={this.props.folders} deleteFolder={this.props.actions.deleteFolder} />
             </div>
         );
     }
