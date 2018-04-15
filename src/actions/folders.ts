@@ -2,6 +2,12 @@ export enum FolderActionType {
     AddFolder = 'addFolder',
     DeleteFolder = 'deleteFolder',
     BrowseForFolder = 'browseForFolder',
+    UpdateFolderStatus = 'updateFolderStatus',
+}
+
+export enum FolderStatus {
+    Idle = 'idle',
+    Sycing = 'syncing',
 }
 
 export interface AddFolderAction {
@@ -19,8 +25,13 @@ export interface BrowseForFolderAction {
     type: FolderActionType.BrowseForFolder;
 }
 
+export interface UpdateFolderStatusAction {
+    type: FolderActionType.UpdateFolderStatus;
+    path: string;
+    status: FolderStatus;
+}
 
-export type FolderAction = AddFolderAction | DeleteFolderAction | BrowseForFolderAction;
+export type FolderAction = AddFolderAction | DeleteFolderAction | BrowseForFolderAction | UpdateFolderStatusAction;
 
 export const addFolder = (path: string, remote: string): AddFolderAction => ({
     type: FolderActionType.AddFolder,
@@ -35,4 +46,10 @@ export const deleteFolder = (path: string): DeleteFolderAction => ({
 
 export const browseForFolder = (): BrowseForFolderAction => ({
     type: FolderActionType.BrowseForFolder,
+});
+
+export const updateFolderStatus = (path: string, status: FolderStatus): UpdateFolderStatusAction => ({
+    type: FolderActionType.UpdateFolderStatus,
+    path,
+    status,
 });

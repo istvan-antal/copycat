@@ -22,6 +22,9 @@ export default class FolderList extends React.Component<Props> {
                     {this.props.folders.map(folder => (
                         <tr key={folder.path}>
                             <td>
+                                {folder.status}
+                            </td>
+                            <td>
                                 {folder.path}
                             </td>
                             <td>

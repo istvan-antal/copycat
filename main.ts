@@ -4,11 +4,10 @@ import { watch, FSWatcher } from 'chokidar';
 import { AppState } from './src/reducers';
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 import { AppAction } from './src/actions';
-import { FolderActionType } from './src/actions/folders';
+import { FolderActionType, updateFolderStatus, FolderStatus } from './src/actions/folders';
 import { setFolderPath, FolderFormActionType } from './src/actions/folderForm';
 import { Folder } from './src/reducers/folders';
 import { spawn } from 'child_process';
-import FolderForm from './src/FolderForm';
 
 let mainWindow: BrowserWindow | null;
 const appFolderPath = join(app.getPath('appData'), 'CopyCat');
@@ -48,6 +47,9 @@ const sync = (folder: Folder) => {
         return;
     }
     foldersSyncing.push(folder);
+    if (mainWindow) {
+        mainWindow.webContents.send('action', updateFolderStatus(folder.path, FolderStatus.Sycing));
+    }
 
     const syncProcess = spawn('rsync', ['-avz', '--delete', folder.path, folder.remote]);
     syncProcess.stdout.on('data', data => {
@@ -60,6 +62,10 @@ const sync = (folder: Folder) => {
 
     syncProcess.on('close', code => {
         console.log('close', folder, code);
+        if (mainWindow) {
+            mainWindow.webContents.send('action', updateFolderStatus(folder.path, FolderStatus.Idle));
+        }
+
         foldersSyncing.splice(findIndex(foldersSyncing, item => item.path === folder.path), 1);
         const folderIndex = findIndex(foldersToSync, item => item.path === folder.path);
         if (folderIndex !== -1) {
