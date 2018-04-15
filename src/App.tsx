@@ -13,10 +13,11 @@ export default class App extends React.Component<Props> {
         return (
             <div>
                 <FolderForm
-                    path={this.props.folderForm.path}
+                    {...this.props.folderForm}
                     addFolder={this.props.actions.addFolder}
                     browseForFolder={this.props.actions.browseForFolder}
                     setFolderPath={this.props.actions.setFolderPath}
+                    setRemotePath={this.props.actions.setRemotePath}
                 />
                 <FolderList folders={this.props.folders} deleteFolder={this.props.actions.deleteFolder} />
             </div>

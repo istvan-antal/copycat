@@ -3,9 +3,10 @@ import { AnyAction } from 'redux';
 
 export interface FolderForm {
     path: string;
+    remote: string;
 };
 
-export const folderForm = (state: FolderForm = { path: '' }, action: FolderFormAction): FolderForm => {
+export const folderForm = (state: FolderForm = { path: '', remote: '' }, action: FolderFormAction): FolderForm => {
     
     switch (action.type) {
         case FolderFormActionType.SetFolderPath:
