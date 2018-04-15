@@ -49,6 +49,8 @@ const sync = (folder: Folder) => {
         return;
     }
     foldersSyncing.push(folder);
+
+    tray.setImage(`${__dirname}/../menu-working-inverted.png`);
     if (mainWindow) {
         mainWindow.webContents.send('action', updateFolderStatus(folder.path, FolderStatus.Sycing));
     }
@@ -73,6 +75,8 @@ const sync = (folder: Folder) => {
         if (folderIndex !== -1) {
             foldersToSync.splice(folderIndex, 1);
             sync(folder);
+        } else if (!foldersSyncing.length) {
+            tray.setImage(`${__dirname}/../menu-inverted.png`);
         }
     });
 };
