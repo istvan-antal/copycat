@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import { join, dirname } from 'path';
+import { watch, FSWatcher } from 'chokidar';
 import { AppState } from './src/reducers';
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 import { AppAction } from './src/actions';
@@ -23,16 +24,39 @@ if (DEV_MODE) {
     app.setName('CopyCat');
 }
 
+let watchers: FSWatcher[] = []
+
+const refreshWatchers = (state: AppState) => {
+    watchers.forEach(watcher => {
+        watcher.close();
+    });
+
+    watchers = state.folders.map(folder => {
+        const watcher = watch(folder.path, { ignoreInitial: true, awaitWriteFinish: true });
+
+        watcher
+            .on('add', path => console.log(`File ${path} has been added`))
+            .on('change', path => console.log(`File ${path} has been changed`))
+            .on('unlink', path => console.log(`File ${path} has been removed`));
+
+        return watcher;
+    });
+};
+
 const saveStore = (state: AppState) => {
     writeFileSync(settingsFile, JSON.stringify(state));
+    refreshWatchers(state);
 };
 
 ipcMain.on('ready', (event: any) => {
-    event.sender.send('initialState', JSON.parse(readFileSync(settingsFile).toString()) || {});
+    const state: AppState = JSON.parse(readFileSync(settingsFile).toString()) || {};
+    event.sender.send('initialState', state);
 });
 
+const state: AppState = JSON.parse(readFileSync(settingsFile).toString()) || {};
+refreshWatchers(state);
+
 function createWindow() {
-    // Create the browser window.
     mainWindow = new BrowserWindow({
         width: DEV_MODE ? 800 : 400,
         height: DEV_MODE ? 800 : 200,
@@ -41,19 +65,13 @@ function createWindow() {
     const mainUrl = process.env.MAIN_APP_URL || join('file://', __dirname, '/dist/index.html');
     console.log(`Loading: ${mainUrl}`);
 
-    // and load the index.html of the app.
     mainWindow.loadURL(mainUrl);
 
     if (DEV_MODE) {
-        // Open the DevTools.
         mainWindow.webContents.openDevTools();
     }
 
-    // Emitted when the window is closed.
     mainWindow.on('closed', () => {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
         mainWindow = null;
     });
 
@@ -70,27 +88,17 @@ function createWindow() {
                 saveStore(args[0]);
             break;
         }
-        // event.sender.send('initialState', JSON.parse(readFileSync(settingsFile).toString()) || {});
     });
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
 
-// Quit when all windows are closed.
 app.on('window-all-closed', () => {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
     // if (process.platform !== 'darwin') {
     app.quit();
-    // }
 });
 
 app.on('activate', () => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
     if (mainWindow === null) {
         createWindow();
     }
