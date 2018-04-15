@@ -1,7 +1,10 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import { join, dirname } from 'path';
 import { AppState } from './src/reducers';
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
+import { AppAction } from './src/actions';
+import { FolderActionType } from './src/actions/folders';
+import { setFolderPath } from './src/actions/folderForm';
 
 let mainWindow: BrowserWindow | null;
 const appFolderPath = join(app.getPath('appData'), 'CopyCat');
@@ -20,9 +23,9 @@ if (DEV_MODE) {
     app.setName('CopyCat');
 }
 
-ipcMain.on('saveStore', (event: any, args: [AppState]) => {
-    writeFileSync(settingsFile, JSON.stringify(args[0]));
-});
+const saveStore = (state: AppState) => {
+    writeFileSync(settingsFile, JSON.stringify(state));
+};
 
 ipcMain.on('ready', (event: any) => {
     event.sender.send('initialState', JSON.parse(readFileSync(settingsFile).toString()) || {});
@@ -52,6 +55,22 @@ function createWindow() {
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
         mainWindow = null;
+    });
+
+    ipcMain.on('action', (event: any, args: [AppState, AppAction]) => {
+        const action = args[1];
+
+        switch (action.type) {
+            case FolderActionType.BrowseForFolder:
+                dialog.showOpenDialog(mainWindow!, { properties: ['openDirectory', 'createDirectory'] }, paths => {
+                    event.sender.send('action', setFolderPath(paths[0]));
+                });
+            break;
+            case FolderActionType.AddFolder:
+                saveStore(args[0]);
+            break;
+        }
+        // event.sender.send('initialState', JSON.parse(readFileSync(settingsFile).toString()) || {});
     });
 }
 

@@ -19,6 +19,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/chokidar": "^1.7.5",
     "@types/react-redux": "^5.0.16",
     "chokidar": "^2.0.3",
     "electron": "^1.8.4",

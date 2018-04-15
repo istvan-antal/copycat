@@ -12,7 +12,12 @@ export default class App extends React.Component<Props> {
     render() {
         return (
             <div>
-                <FolderForm addFolder={this.props.actions.addFolder} />
+                <FolderForm
+                    path={this.props.folderForm.path}
+                    addFolder={this.props.actions.addFolder}
+                    browseForFolder={this.props.actions.browseForFolder}
+                    setFolderPath={this.props.actions.setFolderPath}
+                />
                 <FolderList folders={this.props.folders} />
             </div>
         );

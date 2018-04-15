@@ -1,7 +1,10 @@
-import { FolderAction, addFolder } from './folders';
+import { FolderAction, addFolder, browseForFolder } from './folders';
+import { FolderFormAction, setFolderPath } from './folderForm';
 
-export type AppAction = FolderAction;
+export type AppAction = FolderAction | FolderFormAction;
 
 export const actions = {
     addFolder,
+    browseForFolder,
+    setFolderPath,
 };
