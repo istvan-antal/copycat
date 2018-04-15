@@ -25,6 +25,9 @@ export default class FolderList extends React.Component<Props> {
                                 {folder.path}
                             </td>
                             <td>
+                                {folder.remote}
+                            </td>
+                            <td>
                                 <button
                                     onClick={e => {
                                         this.props.deleteFolder(folder.path);

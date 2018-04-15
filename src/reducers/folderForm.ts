@@ -14,6 +14,11 @@ export const folderForm = (state: FolderForm = { path: '', remote: '' }, action:
             ...state,
             path: action.path,
         };
+        case FolderFormActionType.SetRemotePath:
+        return {
+            ...state,
+            remote: action.remote,
+        }
     }
 
     return state;

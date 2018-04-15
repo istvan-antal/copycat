@@ -1,10 +1,12 @@
 import { FolderAction, FolderActionType } from '../actions/folders';
 import { AnyAction } from 'redux';
 
-export type FolderList = Array<{
+export interface Folder {
     path: string;
     remote: string;
-}>;
+}
+
+export type FolderList = Folder[];
 
 export const folders = (state: FolderList = [], action: FolderAction): FolderList => {
     switch (action.type) {
