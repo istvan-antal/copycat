@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, dialog, Tray, Menu } from 'electron';
 import { join, dirname } from 'path';
 import { watch, FSWatcher } from 'chokidar';
+// import { Client } from 'fb-watchman';
 import { AppState } from './src/reducers';
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 import { AppAction } from './src/actions';
@@ -8,6 +9,21 @@ import { FolderActionType, updateFolderStatus, FolderStatus } from './src/action
 import { setFolderPath, FolderFormActionType } from './src/actions/folderForm';
 import { Folder } from './src/reducers/folders';
 import { spawn } from 'child_process';
+const sane = require('sane');
+
+/* const watchClient = new Client();
+watchClient.capabilityCheck({ optional: [], required: ['relative_root'] },
+function (error, resp) {
+    if (error) {
+        // error will be an Error object if the watchman service is not
+        // installed, or if any of the names listed in the `required`
+        // array are not supported by the server
+        console.error(error);
+    }
+    // resp will be an extended version response:
+    // {'version': '3.8.0', 'capabilities': {'relative_root': true}}
+    console.log(resp);
+});*/
 
 let mainWindow: BrowserWindow | null;
 const appFolderPath = join(app.getPath('appData'), 'CopyCat');
@@ -81,7 +97,9 @@ const sync = (folder: Folder) => {
     });
 };
 
-let watchers: FSWatcher[] = []
+// let watchers: FSWatcher[] = [];
+let watchers: /* sane.Watcher*/any[] = [];
+let watchedPaths: string[] = [];
 
 const refreshWatchers = (state: AppState) => {
     watchers.forEach(watcher => {
@@ -89,7 +107,52 @@ const refreshWatchers = (state: AppState) => {
     });
 
     watchers = state.folders.map(folder => {
-        const watcher = watch(folder.path, { ignoreInitial: true, awaitWriteFinish: true });
+        const watcher = sane(folder.path, { watchman: true });
+        watcher.on('change', (e: any) => {
+            console.log('change', e);
+            sync(folder);
+        });
+        watcher.on('add', (e: any) => {
+            console.log('add');
+            sync(folder);
+        });
+        watcher.on('delete', (e: any) => {
+            console.log('delete', e);
+            sync(folder);
+        });
+        return watcher;
+        /* watchClient.command(['watch-project', folder.path.substring(0, folder.path.length - 1)],
+        function (error, resp) {
+            if (error) {
+                console.error('Error initiating watch:', error);
+                return;
+            }
+
+            // It is considered to be best practice to show any 'warning' or
+            // 'error' information to the user, as it may suggest steps
+            // for remediation
+            if ('warning' in resp) {
+                console.log('warning: ', resp.warning);
+            }
+
+            // `watch-project` can consolidate the watch for your
+            // dir_of_interest with another watch at a higher level in the
+            // tree, so it is very important to record the `relative_path`
+            // returned in resp
+
+            console.log('watch established on ', resp.watch,
+                ' relative_path', resp.relative_path);
+        });
+
+        watchClient.command(['subscribe'])*/
+        // return folder.path;
+    });
+    /* watchers.forEach(watcher => {
+        watcher.close();
+    });
+
+    watchers = state.folders.map(folder => {
+        const watcher = watch(folder.path, { ignoreInitial: true });
 
         watcher
             .on('add', path => {
@@ -106,7 +169,7 @@ const refreshWatchers = (state: AppState) => {
             });
 
         return watcher;
-    });
+    });*/
 };
 
 const saveStore = (state: AppState) => {
@@ -131,6 +194,7 @@ ipcMain.on('action', (event: any, args: [AppState, AppAction]) => {
         case FolderFormActionType.SetFolderPath:
         case FolderFormActionType.SetRemotePath:
         case FolderActionType.AddFolder:
+        case FolderActionType.DeleteFolder:
         case FolderActionType.UpdateFolderStatus:
             saveStore(args[0]);
             break;

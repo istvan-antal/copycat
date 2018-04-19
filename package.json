@@ -20,11 +20,14 @@
   "license": "MIT",
   "dependencies": {
     "@types/chokidar": "^1.7.5",
+    "@types/fb-watchman": "^2.0.0",
     "@types/react-redux": "^5.0.16",
     "chokidar": "^2.0.3",
     "electron": "^1.8.4",
+    "fb-watchman": "^2.0.0",
     "react-redux": "^5.0.7",
     "react-ts-runtime": "0.0.11",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "sane": "^2.5.0"
   }
 }
