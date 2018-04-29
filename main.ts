@@ -106,7 +106,7 @@ const refreshWatchers = (state: AppState) => {
         watcher.close();
     });
 
-    watchers = state.folders.map(folder => {
+    watchers = (state.folders || []).map(folder => {
         const watcher = sane(folder.path, { watchman: true });
         watcher.on('change', (e: any) => {
             console.log('change', e);

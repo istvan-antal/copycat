@@ -4,7 +4,10 @@
   "description": "Copycat",
   "main": "./src/index",
   "scripts": {
-    "start": "tsc dev-server.ts --outDir dist; tsc main.ts --outDir dist; node dist/dev-server.js"
+    "start": "bash ./bin/start.sh",
+    "devServer": "react-ts-runtime run &\n echo $!",
+    "preelectron": "tsc main.ts --outDir dist",
+    "electron": "electron dist/main.js"
   },
   "keywords": [
     "Electron",
@@ -21,6 +24,7 @@
   "dependencies": {
     "@types/chokidar": "^1.7.5",
     "@types/fb-watchman": "^2.0.0",
+    "@types/node": "^9.6.6",
     "@types/react-redux": "^5.0.16",
     "chokidar": "^2.0.3",
     "electron": "^1.8.4",
