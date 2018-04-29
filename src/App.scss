@@ -1,0 +1,36 @@
+html {
+    background-color: #21252b;
+    color: #CCC;
+}
+
+table {
+    margin: 0.5rem;
+    border-spacing: 0;
+    td {
+        padding: 0.3rem;
+        border-bottom: 1px solid #CCC;
+    }
+}
+
+form {
+    margin: 0.5rem;
+}
+
+input[type="text"] {
+    margin: 0.25rem;
+    padding: 0.25rem;
+    outline: none;
+    border: 1px solid #CCC;
+    border-radius: 0.2rem;
+    background-color: #21252b;
+    color: #CCC;
+}
+button {
+    margin: 0.25rem;
+    padding: 0.25rem;
+    outline: none;
+    border: 1px solid #CCC;
+    border-radius: 0.2rem;
+    background-color: #21252b;
+    color: #CCC;
+}

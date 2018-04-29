@@ -3,6 +3,7 @@ import { AppState } from './reducers';
 import { actions } from './actions';
 import FolderForm from './FolderForm';
 import FolderList from './FolderList';
+import './App.scss';
 
 interface Props extends AppState {
     actions: typeof actions;
