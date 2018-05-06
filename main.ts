@@ -56,6 +56,23 @@ const findIndex = <T>(array: T[], fn: (item: T) => boolean) => {
     return -1;
 };
 
+const rsync = async (source: string, destination: string) => new Promise((resolve, reject) => {
+    const syncProcess = spawn('rsync', ['-avz', '--delete', '.', destination], {
+        cwd: source,
+    });
+    syncProcess.stdout.on('data', data => {
+        console.log(data.toString());
+    });
+
+    syncProcess.stderr.on('data', data => {
+        console.error(data.toString());
+    });
+
+    syncProcess.on('close', code => {
+        resolve(code);
+    });
+});
+
 const sync = (folder: Folder) => {
     // console.log('rsync', [/*'--dry-run', */'-avz', '--delete', folder.path, folder.remote]);
     if (foldersSyncing.filter(item => item.path === folder.path).length) {
@@ -71,16 +88,7 @@ const sync = (folder: Folder) => {
         mainWindow.webContents.send('action', updateFolderStatus(folder.path, FolderStatus.Sycing));
     }
 
-    const syncProcess = spawn('rsync', ['-avz', '--delete', folder.path, folder.remote]);
-    syncProcess.stdout.on('data', data => {
-        console.log(data.toString());
-    });
-
-    syncProcess.stderr.on('data', data => {
-        console.error(data.toString());
-    });
-
-    syncProcess.on('close', code => {
+    rsync(folder.path, folder.remote).then(code => {
         console.log('close', folder, code);
         if (mainWindow) {
             mainWindow.webContents.send('action', updateFolderStatus(folder.path, FolderStatus.Idle));
@@ -107,6 +115,7 @@ const refreshWatchers = (state: AppState) => {
     });
 
     watchers = (state.folders || []).map(folder => {
+        console.log(`Watch: ${folder.path}`);
         const watcher = sane(folder.path, { watchman: true });
         watcher.on('change', (e: any) => {
             console.log('change', e);
@@ -121,55 +130,7 @@ const refreshWatchers = (state: AppState) => {
             sync(folder);
         });
         return watcher;
-        /* watchClient.command(['watch-project', folder.path.substring(0, folder.path.length - 1)],
-        function (error, resp) {
-            if (error) {
-                console.error('Error initiating watch:', error);
-                return;
-            }
-
-            // It is considered to be best practice to show any 'warning' or
-            // 'error' information to the user, as it may suggest steps
-            // for remediation
-            if ('warning' in resp) {
-                console.log('warning: ', resp.warning);
-            }
-
-            // `watch-project` can consolidate the watch for your
-            // dir_of_interest with another watch at a higher level in the
-            // tree, so it is very important to record the `relative_path`
-            // returned in resp
-
-            console.log('watch established on ', resp.watch,
-                ' relative_path', resp.relative_path);
-        });
-
-        watchClient.command(['subscribe'])*/
-        // return folder.path;
     });
-    /* watchers.forEach(watcher => {
-        watcher.close();
-    });
-
-    watchers = state.folders.map(folder => {
-        const watcher = watch(folder.path, { ignoreInitial: true });
-
-        watcher
-            .on('add', path => {
-                console.log(`File ${path} has been added`);
-                sync(folder);
-            })
-            .on('change', path => {
-                console.log(`File ${path} has been changed`);
-                sync(folder);
-            })
-            .on('unlink', path => {
-                console.log(`File ${path} has been removed`);
-                sync(folder);
-            });
-
-        return watcher;
-    });*/
 };
 
 const saveStore = (state: AppState) => {
