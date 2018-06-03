@@ -5,6 +5,8 @@
   "main": "./src/index",
   "scripts": {
     "start": "bash ./bin/start.sh",
+    "build": "echo 'Build'",
+    "test": "echo 'Test'",
     "devServer": "react-ts-runtime run &\n echo $!",
     "preelectron": "tsc main.ts --outDir dist",
     "electron": "electron dist/main.js"
